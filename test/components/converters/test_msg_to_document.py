@@ -27,6 +27,16 @@ class TestMSGToDocument:
         assert result["attachments"][0].meta == {"date_added": "2021-09-01T00:00:00", "file_path": "sample_pdf_1.pdf"}
         assert "parent_file_path" not in result["attachments"][0].meta
 
+    def test_run_bytestream_with_null_file_path(self, test_files_path):
+        """A source whose 'file_path' meta is None must not raise, and keeps the None (see #13764)."""
+        source = ByteStream.from_file_path(test_files_path / "msg" / "sample.msg")
+        source.meta["file_path"] = None
+
+        result = MSGToDocument().run(sources=[source])
+
+        assert len(result["documents"]) == 1
+        assert result["documents"][0].meta["file_path"] is None
+
     def test_run(self, test_files_path):
         converter = MSGToDocument(store_full_path=True)
         paths = [test_files_path / "msg" / "sample.msg"]

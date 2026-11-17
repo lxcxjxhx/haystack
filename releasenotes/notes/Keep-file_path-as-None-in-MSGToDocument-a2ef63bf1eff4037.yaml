@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    Fixed ``MSGToDocument`` raising ``TypeError`` when a source ``ByteStream`` has ``file_path`` set to ``None``
+    in its meta. The component called ``os.path.basename(bytestream.meta["file_path"])`` without checking the value,
+    so the whole batch failed instead of converting the file. ``file_path`` now stays ``None`` in the document
+    meta, matching ``CSVToDocument``, ``DOCXToDocument``, ``HTMLToDocument`` and ``XLSXToDocument``.

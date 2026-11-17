@@ -188,7 +188,9 @@ class MSGToDocument:
             merged_metadata = {**bytestream.meta, **metadata}
 
             if not self.store_full_path and "file_path" in bytestream.meta:
-                merged_metadata["file_path"] = os.path.basename(bytestream.meta["file_path"])
+                file_path = bytestream.meta.get("file_path")
+                if file_path:  # Ensure the value is not None for mypy
+                    merged_metadata["file_path"] = os.path.basename(file_path)
 
             documents.append(Document(content=text, meta=merged_metadata))
             for attachment in attachments:
